@@ -1,0 +1,1 @@
+/Users/adilbolatkhanov/Desktop/Adil's folder/AndroidStudioProjects/ante-backend/src/test/kotlin/com/adil/ApplicationTest.kt
