@@ -9,10 +9,11 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 
+private val jwtSecret = System.getenv(JWT_SECRET)
+
 class JwtService {
 
     private val issuer = ANTE_BACKEND
-    private val jwtSecret = System.getenv(JWT_SECRET)
     private val algorithm = Algorithm.HMAC512(jwtSecret)
 
     val verifier: JWTVerifier = JWT

@@ -24,7 +24,7 @@ const val USER_DELETE = "$USERS/delete"
 fun Application.registerUserRoute(jwtService: JwtService) {
     routing {
         createUser(jwtService)
-        loginRoute()
+        loginRoute(jwtService)
     }
 }
 
@@ -49,7 +49,7 @@ fun Route.createUser(jwt: JwtService) {
     }
 }
 
-fun Route.loginRoute() {
+fun Route.loginRoute(jwt: JwtService) {
     post(USER_LOGIN) {
         val request = try {
             call.receive<AccountLoginRequest>()
@@ -59,7 +59,7 @@ fun Route.loginRoute() {
         }
         val isPasswordCorrect = checkPasswordForEmail(request.email, request.password)
         if (isPasswordCorrect)
-            call.respond(HttpStatusCode.OK, SimpleResponse(true, "You are now logged in!"))
+            call.respond(HttpStatusCode.OK, SimpleResponse(true, jwt.generateToken(findUser(request.email)!!)))
         else
             call.respond(HttpStatusCode.OK, SimpleResponse(false, "The password or email is incorrect"))
     }

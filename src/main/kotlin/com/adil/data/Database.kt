@@ -22,5 +22,5 @@ suspend fun checkPasswordForEmail(email: String, passwordToCheck: String): Boole
 }
 
 suspend fun findUser(email: String): User? {
-    return users.findOne(User::id eq email)
+    return users.findOne(User::email eq email)
 }

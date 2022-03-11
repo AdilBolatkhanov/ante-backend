@@ -35,14 +35,23 @@ fun Application.module() {
                 val payload = it.payload
                 val claim = payload.getClaim(Constants.AUTH_CLAIM)
                 val user = findUser(claim.asString())
-                user?.let { curUser ->
-                    UserIdPrincipal(curUser.id)
-                }
+                if (user != null)
+                    UserIdPrincipal(user.email)
+                else
+                    null
             }
         }
     }
 
     registerUserRoute(jwtService)
+    routing {
+        authenticate {
+            get("/") {
+                val email = call.principal<UserIdPrincipal>()!!.name
+                call.respondText("HELLO WORLD! $email")
+            }
+        }
+    }
 }
 
 const val API_VERSION = "/v1"

@@ -9,9 +9,11 @@
       "value": "mongodb+srv://adil:mtNWO5Nl7iTDiPRP@ante.qknje.mongodb.net/AnteBackend?retryWrites=true&w=majority"
     },
     "JWT_SECRET": {
+      "description": "Jwt secret",
       "value": "898748674728934843"
     },
     "SECRET_KEY": {
+      "description": "Secret key",
       "value": "898748674728934843"
     }
   }
