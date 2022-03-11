@@ -1,14 +1,15 @@
-package com.adil.data
+package com.adil.data.collections
 
 import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.types.ObjectId
 
 data class User(
-    val login: String,
+    val username: String,
     val password: String,
     val fistName: String,
     val lastName: String,
-    val image: String,
+    val email: String,
+    val dateOfBirth: Long,
     @BsonId
     val id: String = ObjectId().toString()
 )

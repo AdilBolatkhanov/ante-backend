@@ -1,6 +1,13 @@
 package com.adil
 
+import com.adil.auth.JwtService
+import com.adil.data.findUser
+import com.adil.routing.registerUserRoute
+import com.adil.utils.Constants
+import com.adil.utils.Constants.ANTE_BACKEND
 import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.gson.*
 import io.ktor.request.*
@@ -13,17 +20,29 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    install(CallLogging) {
-        level = Level.INFO
-        filter { call -> call.request.path().startsWith("/") }
-    }
+    install(CallLogging)
     install(DefaultHeaders)
     install(ContentNegotiation) {
         gson { setPrettyPrinting() }
     }
-    install(Routing) {
-        get("/") {
-            call.respondText("Hello world!")
+
+    val jwtService = JwtService()
+    install(Authentication){
+        jwt {
+            verifier(jwtService.verifier)
+            realm = ANTE_BACKEND
+            validate {
+                val payload = it.payload
+                val claim = payload.getClaim(Constants.AUTH_CLAIM)
+                val user = findUser(claim.asString())
+                user?.let { curUser ->
+                    UserIdPrincipal(curUser.id)
+                }
+            }
         }
     }
+
+    registerUserRoute(jwtService)
 }
+
+const val API_VERSION = "/v1"
