@@ -7,6 +7,7 @@ import com.adil.utils.Constants.MONGODB_URI
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
 import org.litote.kmongo.reactivestreams.KMongo
+import org.litote.kmongo.setValue
 
 private val client = KMongo.createClient(System.getenv(MONGODB_URI)).coroutine
 private val database = client.getDatabase(ANTE_BACKEND)
@@ -40,6 +41,34 @@ suspend fun deleteUser(id: String): Boolean {
     return user?.let { curUser ->
         users.deleteOneById(curUser.id).wasAcknowledged()
     } ?: false
+}
+
+suspend fun updateUserUsername(id: String, username: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::username, username)).wasAcknowledged()
+}
+
+suspend fun updateUserFirstName(id: String, firstName: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::firstName, firstName)).wasAcknowledged()
+}
+
+suspend fun updateUserLastName(id: String, secondName: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::lastName, secondName)).wasAcknowledged()
+}
+
+suspend fun updateUserBio(id: String, bio: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::bio, bio)).wasAcknowledged()
+}
+
+suspend fun updateUserDateOfBirth(id: String, dateOfBirth: Long): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::dateOfBirth, dateOfBirth)).wasAcknowledged()
+}
+
+suspend fun updateUserBackground(id: String, background: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::backgroundUrl, background)).wasAcknowledged()
+}
+
+suspend fun updateUserProfileImage(id: String, profileImage: String): Boolean {
+    return users.updateOne(User::id eq id, setValue(User::profileImageUrl, profileImage)).wasAcknowledged()
 }
 
 //Habits

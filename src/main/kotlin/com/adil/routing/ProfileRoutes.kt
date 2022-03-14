@@ -78,12 +78,21 @@ fun Route.getProfileInfo() {
         }
 
         post("/edit") {
+            val id = call.principal<UserIdPrincipal>()!!.name
             val request = try {
                 call.receive<EditProfileRequest>()
             } catch (e: ContentTransformationException) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
+            updateUserUsername(id, request.username)
+            request.bio?.let { bio -> updateUserBio(id, bio) }
+            updateUserFirstName(id, request.firstName)
+            updateUserLastName(id, request.lastName)
+            request.dateOfBirth?.let { date -> updateUserDateOfBirth(id, date) }
+            request.backgroundUrl?.let { background -> updateUserBackground(id, background) }
+            request.profileImageUrl?.let { image -> updateUserBackground(id, image) }
+            call.respond(HttpStatusCode.OK)
         }
     }
 }
