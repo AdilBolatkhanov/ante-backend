@@ -2,7 +2,8 @@ package com.adil
 
 import com.adil.auth.JwtService
 import com.adil.data.findUser
-import com.adil.routing.registerUserRoute
+import com.adil.routing.registerProfileRoutes
+import com.adil.routing.registerUserRoutes
 import com.adil.utils.Constants
 import com.adil.utils.Constants.ANTE_BACKEND
 import io.ktor.application.*
@@ -36,14 +37,15 @@ fun Application.module() {
                 val claim = payload.getClaim(Constants.AUTH_CLAIM)
                 val user = findUser(claim.asString())
                 if (user != null)
-                    UserIdPrincipal(user.email)
+                    UserIdPrincipal(user.id)
                 else
                     null
             }
         }
     }
 
-    registerUserRoute(jwtService)
+    registerUserRoutes(jwtService)
+    registerProfileRoutes()
     routing {
         authenticate {
             get("/") {

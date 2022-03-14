@@ -13,5 +13,5 @@ data class RegisterUserRequest(
 )
 
 fun RegisterUserRequest.toUser() = User(
-    username, hashPassword(password), firstName, lastName, email, dateOfBirth
+    username, hashPassword(password), firstName, lastName, email
 )

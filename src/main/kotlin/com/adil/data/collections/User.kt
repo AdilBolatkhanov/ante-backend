@@ -9,7 +9,17 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val dateOfBirth: Long,
+    val dateOfBirth: Long? = null,
+    val backgroundUrl: String? = null,
+    val profileImageUrl: String? = null,
+    val bio: String? = null,
+    val following: List<String> = emptyList(),
+    val followers: List<String> = emptyList(),
     @BsonId
     val id: String = ObjectId().toString()
 )
+
+
+
+
+
