@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.smithy.kotlin:io-jvm:0.7.3-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/io-jvm/0.7.3-beta/27193ec4cb132976c56aaebcbcccdf4eafeec897/io-jvm-0.7.3-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/io-jvm/0.7.3-beta/211ea6e329751d7fa673cd7f125b1384e9ec19a6/io-jvm-0.7.3-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

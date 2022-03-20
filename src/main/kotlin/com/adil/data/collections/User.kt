@@ -17,6 +17,7 @@ data class User(
     val followers: List<String> = emptyList(),
     @BsonId
     val id: String = ObjectId().toString()
+
 )
 
 

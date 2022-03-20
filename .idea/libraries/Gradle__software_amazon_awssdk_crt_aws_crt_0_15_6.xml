@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: software.amazon.awssdk.crt:aws-crt:0.15.6">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk.crt/aws-crt/0.15.6/e135b619f0444e33acb3e015eb02e17070ac00e6/aws-crt-0.15.6.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/software.amazon.awssdk.crt/aws-crt/0.15.6/b66c70f5b407979373a98f801f8cbdd5fc71bd4c/aws-crt-0.15.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

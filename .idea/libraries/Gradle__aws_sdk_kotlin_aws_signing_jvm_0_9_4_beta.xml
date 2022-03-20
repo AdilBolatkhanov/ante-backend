@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.sdk.kotlin:aws-signing-jvm:0.9.4-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-signing-jvm/0.9.4-beta/566f4fa0800ba2c9455ff0308bcc206eecce3fb3/aws-signing-jvm-0.9.4-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-signing-jvm/0.9.4-beta/1c2a4264bd4a795c188a09d26bb732ff7d0c5eca/aws-signing-jvm-0.9.4-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

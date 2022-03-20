@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.sdk.kotlin:aws-core-jvm:0.9.4-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-core-jvm/0.9.4-beta/1dcdfed7e511a60c1a033b011fe41a752306fc3a/aws-core-jvm-0.9.4-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-core-jvm/0.9.4-beta/fb49062e4567e38d678251c65e834edb755d50f6/aws-core-jvm-0.9.4-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

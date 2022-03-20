@@ -36,6 +36,7 @@
     <orderEntry type="library" name="Gradle: io.ktor:ktor-server-netty-jvm:1.6.7" level="project" />
     <orderEntry type="library" name="Gradle: io.ktor:ktor-server-host-common-jvm:1.6.7" level="project" />
     <orderEntry type="library" name="Gradle: io.ktor:ktor-server-core-jvm:1.6.7" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:s3:0.9.4-beta" level="project" />
     <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo-coroutine:4.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo-coroutine-core:4.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0" level="project" />
@@ -45,6 +46,9 @@
     <orderEntry type="library" name="Gradle: io.ktor:ktor-network-jvm:1.6.7" level="project" />
     <orderEntry type="library" name="Gradle: io.ktor:ktor-utils-jvm:1.6.7" level="project" />
     <orderEntry type="library" name="Gradle: io.ktor:ktor-io-jvm:1.6.7" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:aws-signing-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:aws-endpoint-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.smithy.kotlin:http-jvm:0.7.3-beta" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10" level="project" />
@@ -62,7 +66,13 @@
     <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo-id:4.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.litote:kreflect:1.0.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.6.0" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:aws-config-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:aws-core-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.sdk.kotlin:aws-types-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.smithy.kotlin:runtime-core-jvm:0.7.3-beta" level="project" />
     <orderEntry type="library" name="Gradle: org.litote.kmongo:kmongo-data:4.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: aws.smithy.kotlin:io-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" name="Gradle: aws.smithy.kotlin:utils-jvm:0.7.3-beta" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.6.10" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.32" level="project" />
     <orderEntry type="library" name="Gradle: com.typesafe:config:1.4.1" level="project" />
@@ -93,7 +103,18 @@
     <orderEntry type="library" name="Gradle: org.reactivestreams:reactive-streams:1.0.3" level="project" />
     <orderEntry type="library" name="Gradle: org.mongodb:mongodb-driver-core:4.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.mongodb:bson:4.4.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.sdk.kotlin:aws-http-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.sdk.kotlin:http-client-engine-crt-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.sdk.kotlin:crt-util-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.smithy.kotlin:serde-xml-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.smithy.kotlin:serde-json-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.smithy.kotlin:serde-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.smithy.kotlin:logging-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: aws.sdk.kotlin.crt:aws-crt-kotlin-jvm:0.5.1-beta" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlinx:atomicfu-jvm:0.16.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: io.github.microutils:kotlin-logging-jvm:2.0.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.fusesource.jansi:jansi:2.4.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.ogce:xpp3:1.1.6" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.guava:guava:30.0-jre" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
@@ -103,6 +124,9 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.errorprone:error_prone_annotations:2.3.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: io.projectreactor:reactor-core:3.2.22.RELEASE" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: xmlpull:xmlpull:1.1.3.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: jakarta-regexp:jakarta-regexp:1.4" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: software.amazon.awssdk.crt:aws-crt:0.15.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-server-tests-jvm:1.6.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-server-test-host-jvm:1.6.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: io.ktor:ktor-websockets-jvm:1.6.7" level="project" />
@@ -127,8 +151,19 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty:jetty-http:9.4.42.v20210604" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty:jetty-io:9.4.42.v20210604" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.eclipse.jetty:jetty-util:9.4.42.v20210604" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.sdk.kotlin:aws-http-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.sdk.kotlin:http-client-engine-crt-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.sdk.kotlin:crt-util-jvm:0.9.4-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.smithy.kotlin:serde-xml-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.smithy.kotlin:serde-json-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.smithy.kotlin:serde-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.smithy.kotlin:logging-jvm:0.7.3-beta" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: aws.sdk.kotlin.crt:aws-crt-kotlin-jvm:0.5.1-beta" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-debug:1.6.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:atomicfu-jvm:0.16.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: io.github.microutils:kotlin-logging-jvm:2.0.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.fusesource.jansi:jansi:2.4.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.ogce:xpp3:1.1.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: commons-codec:commons-codec:1.15" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.guava:guava:30.0-jre" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.guava:failureaccess:1.0.1" level="project" />
@@ -138,7 +173,10 @@
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.errorprone:error_prone_annotations:2.3.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.google.j2objc:j2objc-annotations:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: io.projectreactor:reactor-core:3.2.22.RELEASE" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: xmlpull:xmlpull:1.1.3.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: jakarta-regexp:jakarta-regexp:1.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: net.java.dev.jna:jna-platform:5.9.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: net.java.dev.jna:jna:5.9.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: software.amazon.awssdk.crt:aws-crt:0.15.6" level="project" />
   </component>
 </module>

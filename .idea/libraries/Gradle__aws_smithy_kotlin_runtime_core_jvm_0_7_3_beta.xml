@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.smithy.kotlin:runtime-core-jvm:0.7.3-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/runtime-core-jvm/0.7.3-beta/3abdc86e5bc3b277c5445cbcbe28040c681ff31b/runtime-core-jvm-0.7.3-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/runtime-core-jvm/0.7.3-beta/88f94b6b0764e228ae14df506d475a933b3c6650/runtime-core-jvm-0.7.3-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

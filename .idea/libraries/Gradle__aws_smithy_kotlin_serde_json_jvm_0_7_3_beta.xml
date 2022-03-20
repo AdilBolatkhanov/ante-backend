@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.smithy.kotlin:serde-json-jvm:0.7.3-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/serde-json-jvm/0.7.3-beta/c2adc445193366aa9f0f27c40a94f3697dbdcc73/serde-json-jvm-0.7.3-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.smithy.kotlin/serde-json-jvm/0.7.3-beta/a5ace36f24b1029dc6322b80202052d4c7b43e1e/serde-json-jvm-0.7.3-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

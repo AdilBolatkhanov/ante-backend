@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.sdk.kotlin:aws-types-jvm:0.9.4-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-types-jvm/0.9.4-beta/9f7a67dc41b9c0ae8a5edd8774fd81f6cc55468a/aws-types-jvm-0.9.4-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin/aws-types-jvm/0.9.4-beta/b4efd0e0d6b619dcd297d71b54ae020798360ae4/aws-types-jvm-0.9.4-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

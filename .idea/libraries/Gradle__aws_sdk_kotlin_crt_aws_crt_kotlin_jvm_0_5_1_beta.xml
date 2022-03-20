@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: aws.sdk.kotlin.crt:aws-crt-kotlin-jvm:0.5.1-beta">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin.crt/aws-crt-kotlin-jvm/0.5.1-beta/6f3d1977132a16399eec684caf990f2809b0fc96/aws-crt-kotlin-jvm-0.5.1-beta.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/aws.sdk.kotlin.crt/aws-crt-kotlin-jvm/0.5.1-beta/74a1b7b990f1e90e31952b0f3647258b07f14237/aws-crt-kotlin-jvm-0.5.1-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
