@@ -9,6 +9,7 @@ import com.adil.data.addImage
 import com.adil.data.collections.Image
 import com.adil.data.findUser
 import com.adil.data.getImage
+import com.adil.data.responses.SimpleResponse
 import com.adil.routing.registerProfileRoutes
 import com.adil.routing.registerUserRoutes
 import com.adil.utils.Constants
@@ -37,7 +38,7 @@ fun Application.module() {
     }
 
     val jwtService = JwtService()
-    install(Authentication){
+    install(Authentication) {
         jwt {
             verifier(jwtService.verifier)
             realm = ANTE_BACKEND
@@ -62,36 +63,35 @@ fun Application.module() {
                 call.respondText("HELLO WORLD! $email")
             }
         }
-        post("/upload"){
+        post("/upload") {
             val multipartData = call.receiveMultipart()
 
             multipartData.forEachPart { part ->
                 if (part is PartData.FileItem) {
-                        val fileBytes = part.streamProvider().readBytes()
-                        val image = Image(fileBytes)
-                        //addImage(image)
-                        val request = PutObjectRequest {
-                            bucket = "profile-ante"
-                            key = part.originalFileName
-                            this.body = ByteStream.fromBytes(fileBytes)
-                        }
-
-                        S3Client { region = "eu-west-2"
-                        credentialsProvider = awsConfig.credentialsProvider}.use { s3 ->
-                            val response = s3.putObject(request)
-                            println("Tag information is ${response.eTag}")
-                        }
+                    val fileBytes = part.streamProvider().readBytes()
+                    //val image = Image(fileBytes)
+                    //addImage(image)
+                    val request = PutObjectRequest {
+                        bucket = "profile-ante"
+                        key = part.originalFileName
+                        this.body = ByteStream.fromBytes(fileBytes)
                     }
+
+                    S3Client(awsConfig).use { s3 ->
+                        s3.putObject(request)
+                    }
+                    call.respond(HttpStatusCode.OK, SimpleResponse(true, "Uploaded"))
+                }
             }
         }
         get("/image/{id}") {
-            val id = call.parameters["id"]  ?: return@get call.respond(
+            val id = call.parameters["id"] ?: return@get call.respond(
                 HttpStatusCode.BadRequest, "Missing Fields"
             )
             val image = getImage(id)
-            if (image != null){
+            if (image != null) {
                 call.respond(image.data)
-            }else{
+            } else {
                 call.respond(HttpStatusCode.BadRequest, "Problems creating user")
             }
         }
