@@ -17,7 +17,6 @@ private val goals = database.getCollection<Goal>()
 private val subGoals = database.getCollection<SubGoal>()
 private val posts = database.getCollection<Post>()
 private val comments = database.getCollection<Comment>()
-private val images = database.getCollection<Image>()
 //User
 suspend fun registerUser(user: User): Boolean {
     return users.insertOne(user).wasAcknowledged()
@@ -95,13 +94,4 @@ suspend fun getPostForUser(goalId: String): List<Post>{
 //Comments
 suspend fun getCommentsForPost(postId: String): List<Comment> {
     return comments.find(Comment::postId eq postId).toList()
-}
-
-//Image
-suspend fun addImage(image: Image): Boolean {
-    return images.insertOne(image).wasAcknowledged()
-}
-
-suspend fun getImage(id: String): Image? {
-    return images.findOne(Image::id eq id)
 }
