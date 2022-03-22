@@ -8,6 +8,6 @@ data class AwsConfig(override val credentialsProvider: CredentialsProvider = Cre
 
 class CredentialProvider : CredentialsProvider {
     override suspend fun getCredentials(): Credentials {
-        return Credentials("AKIAYBIPJCVQGOOLUY5H", "kUzHtkSmtDoa7TqcY7OvXgmBMcU92pZK/Tx3ORAU")
+        return Credentials("", "")
     }
 }
