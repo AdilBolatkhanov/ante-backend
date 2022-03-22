@@ -1,6 +1,5 @@
 package com.adil.data.responses
 
-import com.adil.data.collections.GoalTag
 import com.adil.data.collections.Habit
 
 data class UserProfile(
@@ -22,9 +21,9 @@ data class UserProfile(
 data class GoalInProfile(
     val title: String,
     val dueDate: Long,
-    val tag: GoalTag,
+    val tag: String,
     val backgroundColor: String,
-    val iconUrl: String,
+    val iconName: String,
     val subGoals: List<Boolean>,
     val ownerId: String,
     val id: String
@@ -34,11 +33,11 @@ data class PostInProfile(
     val dateOfCreation: Long,
     val authorName: String,
     val authorUsername: String,
-    val authorImageUrl: String,
+    val authorImageUrl: String?,
     val likes: Int,
     val comments: Int,
     val description: String,
     val ownerId: String,
-    var imageUrl: String? = null,
+    var imageUrl: String?,
     val id: String
 )

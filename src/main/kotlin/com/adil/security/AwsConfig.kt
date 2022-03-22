@@ -1,4 +1,4 @@
-package com.adil
+package com.adil.security
 
 import aws.sdk.kotlin.runtime.auth.credentials.Credentials
 import aws.sdk.kotlin.runtime.auth.credentials.CredentialsProvider

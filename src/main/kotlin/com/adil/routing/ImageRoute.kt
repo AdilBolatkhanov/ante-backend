@@ -4,7 +4,7 @@ import aws.sdk.kotlin.services.s3.S3Client
 import aws.sdk.kotlin.services.s3.model.PutObjectRequest
 import aws.smithy.kotlin.runtime.content.ByteStream
 import com.adil.API_VERSION
-import com.adil.AwsConfig
+import com.adil.security.AwsConfig
 import com.adil.utils.Constants.AWS_S3_IMAGE_BUCKET
 import com.adil.utils.Constants.AWS_S3_URL
 import io.ktor.application.*

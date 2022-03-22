@@ -38,7 +38,7 @@ fun Route.getProfileInfo() {
                     title = goal.title,
                     id = goal.id,
                     ownerId = goal.ownerId,
-                    iconUrl = goal.iconUrl,
+                    iconName = goal.iconName,
                     backgroundColor = goal.backgroundColor,
                     tag = goal.tag,
                     dueDate = goal.dueDate
@@ -52,7 +52,7 @@ fun Route.getProfileInfo() {
                     likes = post.peopleLiked.size,
                     comments = comments.size,
                     description = post.description,
-                    authorImageUrl = userInfo?.profileImageUrl.orEmpty(),
+                    authorImageUrl = userInfo?.profileImageUrl,
                     authorName = "${userInfo?.firstName.orEmpty()} ${userInfo?.lastName.orEmpty()}",
                     authorUsername = userInfo?.username.orEmpty(),
                     ownerId = id,
@@ -91,7 +91,7 @@ fun Route.getProfileInfo() {
             updateUserLastName(id, request.lastName)
             request.dateOfBirth?.let { date -> updateUserDateOfBirth(id, date) }
             request.backgroundUrl?.let { background -> updateUserBackground(id, background) }
-            request.profileImageUrl?.let { image -> updateUserBackground(id, image) }
+            request.profileImageUrl?.let { image -> updateUserProfileImage(id, image) }
             call.respond(HttpStatusCode.OK)
         }
     }

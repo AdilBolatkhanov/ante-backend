@@ -42,7 +42,7 @@ fun Route.createUserRoute(jwt: JwtService) {
             if (registerUser(user))
                 call.respond(HttpStatusCode.OK, SimpleResponse(true, jwt.generateToken(user)))
             else
-                call.respond(HttpStatusCode.OK, SimpleResponse(false, "An unknown error occured!"))
+                call.respond(HttpStatusCode.OK, SimpleResponse(false, "An unknown error occurred!"))
         } else {
             call.respond(HttpStatusCode.OK, SimpleResponse(false, "A user with such email already exists!"))
         }

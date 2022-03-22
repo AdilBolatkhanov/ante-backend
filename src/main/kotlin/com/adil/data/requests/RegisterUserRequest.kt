@@ -8,8 +8,7 @@ data class RegisterUserRequest(
     val password: String,
     val firstName: String,
     val lastName: String,
-    val email: String,
-    val dateOfBirth: Long
+    val email: String
 )
 
 fun RegisterUserRequest.toUser() = User(
