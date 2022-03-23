@@ -6,7 +6,7 @@ import com.adil.data.*
 import com.adil.data.requests.AccountLoginRequest
 import com.adil.data.requests.RegisterUserRequest
 import com.adil.data.requests.toUser
-import com.adil.data.responses.SimpleResponse
+import com.adil.data.responses.UserCredentialsResponse
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.ContentTransformationException
@@ -40,16 +40,16 @@ fun Route.createUserRoute(jwt: JwtService) {
         if (!userExists) {
             val user = account.toUser()
             if (registerUser(user))
-                call.respond(HttpStatusCode.OK, SimpleResponse(true, jwt.generateToken(user)))
+                call.respond(HttpStatusCode.OK, UserCredentialsResponse(jwt.generateToken(user), user.id))
             else
-                call.respond(HttpStatusCode.OK, SimpleResponse(false, "An unknown error occurred!"))
+                call.respond(HttpStatusCode.BadRequest, "An unknown error occurred!")
         } else {
-            call.respond(HttpStatusCode.OK, SimpleResponse(false, "A user with such email already exists!"))
+            call.respond(HttpStatusCode.BadRequest, "A user with such email already exists!")
         }
     }
 }
 
-fun Route.deleteUserRoute(){
+fun Route.deleteUserRoute() {
     authenticate {
         delete(USER_DELETE) {
             val id = call.principal<UserIdPrincipal>()!!.name
@@ -70,9 +70,16 @@ fun Route.loginRoute(jwt: JwtService) {
             return@post
         }
         val isPasswordCorrect = checkPasswordForEmail(request.email, request.password)
-        if (isPasswordCorrect)
-            call.respond(HttpStatusCode.OK, SimpleResponse(true, jwt.generateToken(findUserByEmail(request.email)!!)))
-        else
-            call.respond(HttpStatusCode.OK, SimpleResponse(false, "The password or email is incorrect"))
+        if (isPasswordCorrect) {
+            val user = findUserByEmail(request.email) ?: return@post call.respond(
+                HttpStatusCode.BadRequest,
+                "The user with such email does not exist"
+            )
+            call.respond(
+                HttpStatusCode.OK,
+                UserCredentialsResponse(jwt.generateToken(user), user.id)
+            )
+        } else
+            call.respond(HttpStatusCode.BadRequest, "The password or email is incorrect")
     }
 }

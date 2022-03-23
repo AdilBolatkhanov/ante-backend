@@ -112,12 +112,12 @@ fun Route.getProfileInfo() {
             }
             val myId = call.principal<UserIdPrincipal>()!!.name
             val user = findUser(request.userId) ?: return@get call.respond(
-                HttpStatusCode.OK,
-                SimpleResponse(false, "No user with such id exists")
+                HttpStatusCode.BadRequest,
+               "No user with such id exists"
             )
             val me = findUser(myId) ?: return@get call.respond(
-                HttpStatusCode.OK,
-                SimpleResponse(false, "No user with such id exists")
+                HttpStatusCode.BadRequest,
+                "No user with such id exists"
             )
 
             val followers = user.followers.mapNotNull { followerId ->
@@ -144,12 +144,12 @@ fun Route.getProfileInfo() {
 
             val myId = call.principal<UserIdPrincipal>()!!.name
             val user = findUser(request.userId) ?: return@get call.respond(
-                HttpStatusCode.OK,
-                SimpleResponse(false, "No user with such id exists")
+                HttpStatusCode.BadRequest,
+                "No user with such id exists"
             )
             val me = findUser(myId) ?: return@get call.respond(
-                HttpStatusCode.OK,
-                SimpleResponse(false, "No user with such id exists")
+                HttpStatusCode.BadRequest,
+                "No user with such id exists"
             )
 
             val following = user.following.mapNotNull { followingId ->
@@ -179,27 +179,26 @@ fun Route.getProfileInfo() {
             val userExist = findUser(userId) != null
             if (!userExist){
                 call.respond(
-                    HttpStatusCode.OK,
-                    SimpleResponse(false, "No user with this id exists")
+                    HttpStatusCode.BadRequest,
+                    "No user with this id exists"
                 )
                 return@post
             }
             if (checkIfAlreadyFollowed(myId, userId)){
                 call.respond(
-                    HttpStatusCode.OK,
-                    SimpleResponse(false, "You have already followed")
+                    HttpStatusCode.Conflict, "You have already followed"
                 )
                 return@post
             }
             if (followUser(myId, userId)){
                 call.respond(
                     HttpStatusCode.OK,
-                    SimpleResponse(true, "Successfully followed")
+                   "Successfully followed"
                 )
             }else{
                 call.respond(
-                    HttpStatusCode.OK,
-                    SimpleResponse(false, "Something went wrong during following")
+                    HttpStatusCode.Conflict,
+                    "Something went wrong during following"
                 )
             }
         }
@@ -216,8 +215,8 @@ fun Route.getProfileInfo() {
             val userExist = findUser(userId) != null
             if (!userExist){
                 call.respond(
-                    HttpStatusCode.OK,
-                    SimpleResponse(false, "No user with this id exists")
+                    HttpStatusCode.BadRequest,
+                   "No user with this id exists"
                 )
                 return@post
             }
@@ -225,12 +224,12 @@ fun Route.getProfileInfo() {
             if (unfollowUser(myId, userId)){
                 call.respond(
                     HttpStatusCode.OK,
-                    SimpleResponse(true, "Successfully unfollowed")
+                    "Successfully unfollowed"
                 )
             }else{
                 call.respond(
-                    HttpStatusCode.OK,
-                    SimpleResponse(false, "Something went wrong during unfollowing")
+                    HttpStatusCode.Conflict,
+                    "Something went wrong during unfollowing"
                 )
             }
         }
