@@ -15,7 +15,7 @@ data class UserProfile(
     val followers: List<String>,
     val habits: List<Habit>,
     val goals: List<GoalInProfile>,
-    val posts: List<PostInProfile>
+    val posts: List<PostResponse>
 )
 
 data class GoalInProfile(
@@ -27,18 +27,5 @@ data class GoalInProfile(
     val subGoals: List<Boolean>,
     val ownerId: String,
     val isPrivate: Boolean,
-    val id: String
-)
-
-data class PostInProfile(
-    val dateOfCreation: Long,
-    val authorName: String,
-    val authorUsername: String,
-    val authorImageUrl: String?,
-    val likes: Int,
-    val comments: Int,
-    val description: String,
-    val ownerId: String,
-    var imageUrl: String?,
     val id: String
 )

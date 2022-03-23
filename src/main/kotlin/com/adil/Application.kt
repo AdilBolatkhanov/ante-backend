@@ -3,6 +3,7 @@ package com.adil
 import com.adil.auth.JwtService
 import com.adil.data.findUser
 import com.adil.routing.registerImageHandlingRoutes
+import com.adil.routing.registerPostRoutes
 import com.adil.routing.registerProfileRoutes
 import com.adil.routing.registerUserRoutes
 import com.adil.utils.Constants
@@ -46,6 +47,7 @@ fun Application.module() {
     registerUserRoutes(jwtService)
     registerProfileRoutes()
     registerImageHandlingRoutes()
+    registerPostRoutes()
     routing {
         authenticate {
             get("/") {

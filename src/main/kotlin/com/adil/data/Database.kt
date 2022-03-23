@@ -99,13 +99,20 @@ suspend fun getHabitsForUser(userId: String): List<Habit> {
     return habits.find(Habit::ownerId eq userId).toList()
 }
 
+suspend fun getHabitById(id: String): Habit? {
+    return habits.findOneById(id)
+}
+
 //Goals
 suspend fun getGoalsForUser(userId: String): List<Goal> {
     return goals.find(Goal::ownerId eq userId).toList()
 }
 
-//SubGoals
+suspend fun getGoalById(id: String): Goal? {
+    return goals.findOneById(id)
+}
 
+//SubGoals
 suspend fun getSubGoalForGoal(goalId: String): List<SubGoal> {
     return subGoals.find(SubGoal::goalId eq goalId).toList()
 }
@@ -113,6 +120,28 @@ suspend fun getSubGoalForGoal(goalId: String): List<SubGoal> {
 //Posts
 suspend fun getPostForUser(goalId: String): List<Post>{
     return posts.find(Post::ownerId eq goalId).toList()
+}
+
+suspend fun addRegularPost(description: String, imageUrl: String?, ownerId: String): Boolean {
+    val post = Post(
+        dateOfCreation = System.currentTimeMillis(),
+        description = description,
+        imageUrl = imageUrl,
+        ownerId = ownerId,
+        type = PostType.REGULAR
+    )
+    return posts.insertOne(post).wasAcknowledged()
+}
+
+suspend fun addAchievementPost(type: PostType, achievementId: String, ownerId: String): Boolean {
+    val post = Post(
+        dateOfCreation = System.currentTimeMillis(),
+        description = "",
+        ownerId = ownerId,
+        achievementId = achievementId,
+        type = type
+    )
+    return posts.insertOne(post).wasAcknowledged()
 }
 
 //Comments

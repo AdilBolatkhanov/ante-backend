@@ -2,6 +2,7 @@ package com.adil.routing
 
 import com.adil.API_VERSION
 import com.adil.data.*
+import com.adil.data.collections.PostType
 import com.adil.data.requests.EditProfileRequest
 import com.adil.data.requests.UserIdRequest
 import com.adil.data.responses.*
@@ -48,18 +49,67 @@ fun Route.getProfileInfo() {
             }
             val postsOfUser = getPostForUser(id).map { post ->
                 val comments = getCommentsForPost(post.id)
-                PostInProfile(
-                    dateOfCreation = post.dateOfCreation,
-                    id = post.id,
-                    likes = post.peopleLiked.size,
-                    comments = comments.size,
-                    description = post.description,
-                    authorImageUrl = userInfo.profileImageUrl,
-                    authorName = "${userInfo.firstName} ${userInfo.lastName}",
-                    authorUsername = userInfo.username,
-                    ownerId = id,
-                    imageUrl = post.imageUrl
-                )
+                when (post.type){
+                    PostType.GOAL_ACHIEVEMENT -> {
+                        val goal = getGoalById(post.achievementId.orEmpty())
+                        goal?.let { curGoal ->
+                            PostResponse(
+                                dateOfCreation = post.dateOfCreation,
+                                id = post.id,
+                                likes = post.peopleLiked.size,
+                                comments = comments.size,
+                                description = curGoal.title,
+                                authorImageUrl = userInfo.profileImageUrl,
+                                authorName = "${userInfo.firstName} ${userInfo.lastName}",
+                                authorUsername = userInfo.username,
+                                ownerId = id,
+                                imageUrl = post.imageUrl,
+                                type = post.type,
+                                achievementId = post.achievementId,
+                                iconName = curGoal.iconName,
+                                backgroundColor = curGoal.backgroundColor
+                            )
+                        }
+                    }
+                    PostType.HABIT_ACHIEVEMENT -> {
+                        val habit = getHabitById(post.achievementId.orEmpty())
+                        habit?.let { curHabit ->
+                            PostResponse(
+                                dateOfCreation = post.dateOfCreation,
+                                id = post.id,
+                                likes = post.peopleLiked.size,
+                                comments = comments.size,
+                                description = curHabit.title,
+                                authorImageUrl = userInfo.profileImageUrl,
+                                authorName = "${userInfo.firstName} ${userInfo.lastName}",
+                                authorUsername = userInfo.username,
+                                ownerId = id,
+                                imageUrl = post.imageUrl,
+                                type = post.type,
+                                achievementId = post.achievementId,
+                                iconName = curHabit.iconName,
+                                backgroundColor = curHabit.backgroundColor
+                                )
+                        }
+                    }
+                    else -> {
+                        PostResponse(
+                            dateOfCreation = post.dateOfCreation,
+                            id = post.id,
+                            likes = post.peopleLiked.size,
+                            comments = comments.size,
+                            description = post.description,
+                            authorImageUrl = userInfo.profileImageUrl,
+                            authorName = "${userInfo.firstName} ${userInfo.lastName}",
+                            authorUsername = userInfo.username,
+                            ownerId = id,
+                            imageUrl = post.imageUrl,
+                            type = post.type,
+                            achievementId = post.achievementId)
+                    }
+                }
+            }.mapNotNull {
+                it
             }.sortedByDescending { post ->
                 post.dateOfCreation
             }
