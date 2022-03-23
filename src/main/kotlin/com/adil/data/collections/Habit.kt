@@ -12,6 +12,7 @@ data class Habit(
     val targetNumOfDays: Int,
     val curNumOfDays: Int,
     val ownerId: String,
+    val isPrivate: Boolean,
     @BsonId
     val id: String = ObjectId().toString()
 )

@@ -10,6 +10,7 @@ data class Goal(
     val backgroundColor: String,
     val iconName: String,
     val ownerId: String,
+    val isPrivate: Boolean,
     @BsonId
     val id: String = ObjectId().toString()
 )

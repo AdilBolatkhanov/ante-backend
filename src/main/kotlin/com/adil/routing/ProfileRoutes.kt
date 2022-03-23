@@ -2,11 +2,8 @@ package com.adil.routing
 
 import com.adil.API_VERSION
 import com.adil.data.*
-import com.adil.data.requests.AccountLoginRequest
 import com.adil.data.requests.EditProfileRequest
-import com.adil.data.responses.GoalInProfile
-import com.adil.data.responses.PostInProfile
-import com.adil.data.responses.UserProfile
+import com.adil.data.responses.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.ContentTransformationException
@@ -27,9 +24,10 @@ fun Application.registerProfileRoutes() {
 
 fun Route.getProfileInfo() {
     route(PROFILE) {
-        get {
-            val id = call.principal<UserIdPrincipal>()!!.name
-            val userInfo = findUser(id)
+        get("/{id}") {
+            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            val userInfo =
+                findUser(id) ?: return@get call.respond(HttpStatusCode.BadRequest, "No user with such id exists")
             val habitsOfUser = getHabitsForUser(id)
             val goalsOfUser = getGoalsForUser(id).map { goal ->
                 val subgoals = getSubGoalForGoal(goal.id).map { it.isCompleted }
@@ -41,8 +39,11 @@ fun Route.getProfileInfo() {
                     iconName = goal.iconName,
                     backgroundColor = goal.backgroundColor,
                     tag = goal.tag,
-                    dueDate = goal.dueDate
+                    dueDate = goal.dueDate,
+                    isPrivate = goal.isPrivate
                 )
+            }.sortedBy { goal ->
+                goal.dueDate
             }
             val postsOfUser = getPostForUser(id).map { post ->
                 val comments = getCommentsForPost(post.id)
@@ -52,24 +53,26 @@ fun Route.getProfileInfo() {
                     likes = post.peopleLiked.size,
                     comments = comments.size,
                     description = post.description,
-                    authorImageUrl = userInfo?.profileImageUrl,
-                    authorName = "${userInfo?.firstName.orEmpty()} ${userInfo?.lastName.orEmpty()}",
-                    authorUsername = userInfo?.username.orEmpty(),
+                    authorImageUrl = userInfo.profileImageUrl,
+                    authorName = "${userInfo.firstName} ${userInfo.lastName}",
+                    authorUsername = userInfo.username,
                     ownerId = id,
                     imageUrl = post.imageUrl
                 )
+            }.sortedByDescending { post ->
+                post.dateOfCreation
             }
             val userProfile = UserProfile(
                 userId = id,
-                username = userInfo?.username.orEmpty(),
-                firstName = userInfo?.firstName.orEmpty(),
-                lastName = userInfo?.lastName.orEmpty(),
-                dateOfBirth = userInfo?.dateOfBirth,
-                backgroundUrl = userInfo?.backgroundUrl,
-                profileImageUrl = userInfo?.profileImageUrl,
-                bio = userInfo?.bio,
-                followers = userInfo?.followers ?: emptyList(),
-                following = userInfo?.following ?: emptyList(),
+                username = userInfo.username,
+                firstName = userInfo.firstName,
+                lastName = userInfo.lastName,
+                dateOfBirth = userInfo.dateOfBirth,
+                backgroundUrl = userInfo.backgroundUrl,
+                profileImageUrl = userInfo.profileImageUrl,
+                bio = userInfo.bio,
+                followers = userInfo.followers,
+                following = userInfo.following,
                 habits = habitsOfUser,
                 posts = postsOfUser,
                 goals = goalsOfUser
@@ -93,6 +96,58 @@ fun Route.getProfileInfo() {
             request.backgroundUrl?.let { background -> updateUserBackground(id, background) }
             request.profileImageUrl?.let { image -> updateUserProfileImage(id, image) }
             call.respond(HttpStatusCode.OK)
+        }
+
+        get("/followers/{id}") {
+            val userId = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            val myId = call.principal<UserIdPrincipal>()!!.name
+            val user = findUser(userId) ?: return@get call.respond(
+                HttpStatusCode.OK,
+                SimpleResponse(false, "No user with such id exists")
+            )
+            val me = findUser(myId) ?: return@get call.respond(
+                HttpStatusCode.OK,
+                SimpleResponse(false, "No user with such id exists")
+            )
+
+            val followers = user.followers.map { followerId ->
+                val followerInfo = findUser(followerId)
+                FollowersResponse(
+                    username = followerInfo?.username.orEmpty(),
+                    userId = followerId,
+                    firstName = followerInfo?.firstName.orEmpty(),
+                    lastName = followerInfo?.lastName.orEmpty(),
+                    profileImageUrl = followerInfo?.profileImageUrl,
+                    isFollowed = me.following.contains(followerId)
+                )
+            }
+            call.respond(HttpStatusCode.OK, followers)
+        }
+
+        get("/following/{id}") {
+            val userId = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            val myId = call.principal<UserIdPrincipal>()!!.name
+            val user = findUser(userId) ?: return@get call.respond(
+                HttpStatusCode.OK,
+                SimpleResponse(false, "No user with such id exists")
+            )
+            val me = findUser(myId) ?: return@get call.respond(
+                HttpStatusCode.OK,
+                SimpleResponse(false, "No user with such id exists")
+            )
+
+            val following = user.following.map { followingId ->
+                val followingUser = findUser(followingId)
+                FollowersResponse(
+                    username = followingUser?.username.orEmpty(),
+                    userId = followingId,
+                    firstName = followingUser?.firstName.orEmpty(),
+                    lastName = followingUser?.lastName.orEmpty(),
+                    profileImageUrl = followingUser?.profileImageUrl,
+                    isFollowed = me.following.contains(followingId)
+                )
+            }
+            call.respond(HttpStatusCode.OK, following)
         }
     }
 }

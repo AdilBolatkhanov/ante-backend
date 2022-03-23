@@ -26,6 +26,7 @@ data class GoalInProfile(
     val iconName: String,
     val subGoals: List<Boolean>,
     val ownerId: String,
+    val isPrivate: Boolean,
     val id: String
 )
 
