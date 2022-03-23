@@ -26,12 +26,7 @@ fun Application.registerProfileRoutes() {
 fun Route.getProfileInfo() {
     route(PROFILE) {
         get {
-            val request = try {
-                call.receive<UserIdRequest>()
-            } catch (e: ContentTransformationException) {
-                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
-            }
-            val id = request.userId
+            val id = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
             val userInfo =
                 findUser(id) ?: return@get call.respond(HttpStatusCode.BadRequest, "No user with such id exists")
             val habitsOfUser = getHabitsForUser(id)
@@ -105,13 +100,9 @@ fun Route.getProfileInfo() {
         }
 
         get("/followers") {
-            val request = try {
-                call.receive<UserIdRequest>()
-            } catch (e: ContentTransformationException) {
-                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
-            }
+            val userId = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
             val myId = call.principal<UserIdPrincipal>()!!.name
-            val user = findUser(request.userId) ?: return@get call.respond(
+            val user = findUser(userId) ?: return@get call.respond(
                 HttpStatusCode.BadRequest,
                "No user with such id exists"
             )
@@ -136,14 +127,10 @@ fun Route.getProfileInfo() {
         }
 
         get("/following") {
-            val request = try {
-                call.receive<UserIdRequest>()
-            } catch (e: ContentTransformationException) {
-                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
-            }
+            val userId = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
 
             val myId = call.principal<UserIdPrincipal>()!!.name
-            val user = findUser(request.userId) ?: return@get call.respond(
+            val user = findUser(userId) ?: return@get call.respond(
                 HttpStatusCode.BadRequest,
                 "No user with such id exists"
             )
