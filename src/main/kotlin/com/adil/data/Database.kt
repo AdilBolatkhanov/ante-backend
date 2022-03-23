@@ -70,6 +70,14 @@ suspend fun updateUserProfileImage(id: String, profileImage: String): Boolean {
     return users.updateOne(User::id eq id, setValue(User::profileImageUrl, profileImage)).wasAcknowledged()
 }
 
+suspend fun checkIfAlreadyFollowed(myId: String, userId: String): Boolean {
+    val followingList = findUser(myId)?.following ?: return false
+    val followersList = findUser(userId)?.followers ?: return false
+    return if (followingList.contains(userId))
+        true
+    else followersList.contains(myId)
+}
+
 suspend fun followUser(myId: String, userId: String): Boolean {
     val followingList = findUser(myId)?.following ?: return false
     val followersList = findUser(userId)?.followers ?: return false

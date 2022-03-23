@@ -176,6 +176,21 @@ fun Route.getProfileInfo() {
             val userId = request.userId
             val myId = call.principal<UserIdPrincipal>()!!.name
 
+            val userExist = findUser(userId) != null
+            if (!userExist){
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(false, "No user with this id exists")
+                )
+                return@post
+            }
+            if (checkIfAlreadyFollowed(myId, userId)){
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(false, "You have already followed")
+                )
+                return@post
+            }
             if (followUser(myId, userId)){
                 call.respond(
                     HttpStatusCode.OK,
@@ -197,6 +212,15 @@ fun Route.getProfileInfo() {
             }
             val userId = request.userId
             val myId = call.principal<UserIdPrincipal>()!!.name
+
+            val userExist = findUser(userId) != null
+            if (!userExist){
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(false, "No user with this id exists")
+                )
+                return@post
+            }
 
             if (unfollowUser(myId, userId)){
                 call.respond(
