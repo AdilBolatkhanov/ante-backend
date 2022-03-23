@@ -118,8 +118,15 @@ suspend fun getSubGoalForGoal(goalId: String): List<SubGoal> {
 }
 
 //Posts
-suspend fun getPostForUser(goalId: String): List<Post>{
-    return posts.find(Post::ownerId eq goalId).toList()
+suspend fun getPostForUser(id: String): List<Post>{
+    return posts.find(Post::ownerId eq id).toList()
+}
+
+suspend fun likeUnlikePost(id: String, userId: String): Boolean {
+    val peopleLiked = posts.findOneById(id)?.peopleLiked ?: return false
+    return if (peopleLiked.contains(userId)){
+        posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked - userId)).wasAcknowledged()
+    }else posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked + userId)).wasAcknowledged()
 }
 
 suspend fun addRegularPost(description: String, imageUrl: String?, ownerId: String): Boolean {

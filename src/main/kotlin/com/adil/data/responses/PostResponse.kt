@@ -16,6 +16,7 @@ data class PostResponse(
     val achievementId: String? = null,
     val iconName: String? = null,
     val backgroundColor: String? = null,
-    val id: String
+    val id: String,
+    val isLiked: Boolean
 )
 

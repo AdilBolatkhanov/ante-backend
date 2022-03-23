@@ -27,6 +27,7 @@ fun Application.registerProfileRoutes() {
 fun Route.getProfileInfo() {
     route(PROFILE) {
         get {
+            val myId = call.principal<UserIdPrincipal>()!!.name
             val id = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
             val userInfo =
                 findUser(id) ?: return@get call.respond(HttpStatusCode.BadRequest, "No user with such id exists")
@@ -67,7 +68,8 @@ fun Route.getProfileInfo() {
                                 type = post.type,
                                 achievementId = post.achievementId,
                                 iconName = curGoal.iconName,
-                                backgroundColor = curGoal.backgroundColor
+                                backgroundColor = curGoal.backgroundColor,
+                                isLiked = post.peopleLiked.contains(myId)
                             )
                         }
                     }
@@ -88,7 +90,8 @@ fun Route.getProfileInfo() {
                                 type = post.type,
                                 achievementId = post.achievementId,
                                 iconName = curHabit.iconName,
-                                backgroundColor = curHabit.backgroundColor
+                                backgroundColor = curHabit.backgroundColor,
+                                isLiked = post.peopleLiked.contains(myId)
                                 )
                         }
                     }
@@ -105,7 +108,8 @@ fun Route.getProfileInfo() {
                             ownerId = id,
                             imageUrl = post.imageUrl,
                             type = post.type,
-                            achievementId = post.achievementId)
+                            achievementId = post.achievementId,
+                            isLiked = post.peopleLiked.contains(myId))
                     }
                 }
             }.mapNotNull {
