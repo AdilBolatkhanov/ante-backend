@@ -3,6 +3,7 @@ package com.adil.routing
 import com.adil.API_VERSION
 import com.adil.data.*
 import com.adil.data.requests.EditProfileRequest
+import com.adil.data.requests.UserIdRequest
 import com.adil.data.responses.*
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -24,8 +25,13 @@ fun Application.registerProfileRoutes() {
 
 fun Route.getProfileInfo() {
     route(PROFILE) {
-        get("/{id}") {
-            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+        get {
+            val request = try {
+                call.receive<UserIdRequest>()
+            } catch (e: ContentTransformationException) {
+                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            }
+            val id = request.userId
             val userInfo =
                 findUser(id) ?: return@get call.respond(HttpStatusCode.BadRequest, "No user with such id exists")
             val habitsOfUser = getHabitsForUser(id)
@@ -98,10 +104,14 @@ fun Route.getProfileInfo() {
             call.respond(HttpStatusCode.OK)
         }
 
-        get("/followers/{id}") {
-            val userId = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+        get("/followers") {
+            val request = try {
+                call.receive<UserIdRequest>()
+            } catch (e: ContentTransformationException) {
+                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            }
             val myId = call.principal<UserIdPrincipal>()!!.name
-            val user = findUser(userId) ?: return@get call.respond(
+            val user = findUser(request.userId) ?: return@get call.respond(
                 HttpStatusCode.OK,
                 SimpleResponse(false, "No user with such id exists")
             )
@@ -110,24 +120,30 @@ fun Route.getProfileInfo() {
                 SimpleResponse(false, "No user with such id exists")
             )
 
-            val followers = user.followers.map { followerId ->
-                val followerInfo = findUser(followerId)
+            val followers = user.followers.mapNotNull { followerId ->
+                findUser(followerId)
+            }.map { followerInfo ->
                 FollowersResponse(
-                    username = followerInfo?.username.orEmpty(),
-                    userId = followerId,
-                    firstName = followerInfo?.firstName.orEmpty(),
-                    lastName = followerInfo?.lastName.orEmpty(),
-                    profileImageUrl = followerInfo?.profileImageUrl,
-                    isFollowed = me.following.contains(followerId)
+                    username = followerInfo.username,
+                    userId = followerInfo.id,
+                    firstName = followerInfo.firstName,
+                    lastName = followerInfo.lastName,
+                    profileImageUrl = followerInfo.profileImageUrl,
+                    isFollowed = me.following.contains(followerInfo.id)
                 )
             }
             call.respond(HttpStatusCode.OK, followers)
         }
 
-        get("/following/{id}") {
-            val userId = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+        get("/following") {
+            val request = try {
+                call.receive<UserIdRequest>()
+            } catch (e: ContentTransformationException) {
+                return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+            }
+
             val myId = call.principal<UserIdPrincipal>()!!.name
-            val user = findUser(userId) ?: return@get call.respond(
+            val user = findUser(request.userId) ?: return@get call.respond(
                 HttpStatusCode.OK,
                 SimpleResponse(false, "No user with such id exists")
             )
@@ -136,18 +152,63 @@ fun Route.getProfileInfo() {
                 SimpleResponse(false, "No user with such id exists")
             )
 
-            val following = user.following.map { followingId ->
-                val followingUser = findUser(followingId)
+            val following = user.following.mapNotNull { followingId ->
+               findUser(followingId)
+            }.map { followingUser ->
                 FollowersResponse(
-                    username = followingUser?.username.orEmpty(),
-                    userId = followingId,
-                    firstName = followingUser?.firstName.orEmpty(),
-                    lastName = followingUser?.lastName.orEmpty(),
-                    profileImageUrl = followingUser?.profileImageUrl,
-                    isFollowed = me.following.contains(followingId)
+                    username = followingUser.username,
+                    userId = followingUser.id,
+                    firstName = followingUser.firstName,
+                    lastName = followingUser.lastName,
+                    profileImageUrl = followingUser.profileImageUrl,
+                    isFollowed = me.following.contains(followingUser.id)
                 )
             }
             call.respond(HttpStatusCode.OK, following)
+        }
+
+        post("/follow") {
+            val request = try {
+                call.receive<UserIdRequest>()
+            } catch (e: ContentTransformationException) {
+                return@post call.respond(HttpStatusCode.BadRequest, "Missing id")
+            }
+            val userId = request.userId
+            val myId = call.principal<UserIdPrincipal>()!!.name
+
+            if (followUser(myId, userId)){
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(true, "Successfully followed")
+                )
+            }else{
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(false, "Something went wrong during following")
+                )
+            }
+        }
+
+        post("/unfollow") {
+            val request = try {
+                call.receive<UserIdRequest>()
+            } catch (e: ContentTransformationException) {
+                return@post call.respond(HttpStatusCode.BadRequest, "Missing id")
+            }
+            val userId = request.userId
+            val myId = call.principal<UserIdPrincipal>()!!.name
+
+            if (unfollowUser(myId, userId)){
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(true, "Successfully unfollowed")
+                )
+            }else{
+                call.respond(
+                    HttpStatusCode.OK,
+                    SimpleResponse(false, "Something went wrong during unfollowing")
+                )
+            }
         }
     }
 }

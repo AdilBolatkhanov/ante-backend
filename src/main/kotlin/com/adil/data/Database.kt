@@ -70,6 +70,22 @@ suspend fun updateUserProfileImage(id: String, profileImage: String): Boolean {
     return users.updateOne(User::id eq id, setValue(User::profileImageUrl, profileImage)).wasAcknowledged()
 }
 
+suspend fun followUser(myId: String, userId: String): Boolean {
+    val followingList = findUser(myId)?.following ?: return false
+    val followersList = findUser(userId)?.followers ?: return false
+    val followingAction = users.updateOneById(myId, setValue(User::following, followingList + userId)).wasAcknowledged()
+    val followersAction = users.updateOneById(userId, setValue(User::followers, followersList + myId)).wasAcknowledged()
+    return followingAction && followersAction
+}
+
+suspend fun unfollowUser(myId: String, userId: String): Boolean {
+    val followingList = findUser(myId)?.following ?: return false
+    val followersList = findUser(userId)?.followers ?: return false
+    val followingAction = users.updateOneById(myId, setValue(User::following, followingList - userId)).wasAcknowledged()
+    val followersAction = users.updateOneById(userId, setValue(User::followers, followersList - myId)).wasAcknowledged()
+    return followingAction && followersAction
+}
+
 //Habits
 suspend fun getHabitsForUser(userId: String): List<Habit> {
     return habits.find(Habit::ownerId eq userId).toList()
