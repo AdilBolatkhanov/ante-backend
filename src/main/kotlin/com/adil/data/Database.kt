@@ -155,3 +155,29 @@ suspend fun addAchievementPost(type: PostType, achievementId: String, ownerId: S
 suspend fun getCommentsForPost(postId: String): List<Comment> {
     return comments.find(Comment::postId eq postId).toList()
 }
+
+suspend fun addComment(postId: String, text: String, authorId: String): Boolean {
+    val comment = Comment(
+        dateOfCreation = System.currentTimeMillis(),
+        text = text,
+        postId = postId,
+        peopleHelpful = emptyList(),
+        peopleLiked = emptyList(),
+        authorId = authorId
+    )
+    return comments.insertOne(comment).wasAcknowledged()
+}
+
+suspend fun likeUnlikeComment(id: String, userId: String): Boolean {
+    val peopleLiked = comments.findOneById(id)?.peopleLiked ?: return false
+    return if (peopleLiked.contains(userId)){
+        comments.updateOneById(id, setValue(Comment::peopleLiked, peopleLiked - userId)).wasAcknowledged()
+    }else comments.updateOneById(id, setValue(Comment::peopleLiked, peopleLiked + userId)).wasAcknowledged()
+}
+
+suspend fun helpfulComment(id: String, userId: String): Boolean {
+    val peopleHelpful = comments.findOneById(id)?.peopleHelpful ?: return false
+    return if (peopleHelpful.contains(userId)){
+        comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful - userId)).wasAcknowledged()
+    }else comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful + userId)).wasAcknowledged()
+}
