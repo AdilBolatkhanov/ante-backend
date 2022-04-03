@@ -20,6 +20,81 @@ fun Application.registerPostRoutes() {
     routing {
         authenticate {
             postsRoutes()
+            commentsRoutes()
+        }
+    }
+}
+
+fun Route.commentsRoutes(){
+    route("$POST/comments"){
+        get{
+            val myId = call.principal<UserIdPrincipal>()!!.name
+            val postId = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
+
+            val comments = getCommentsForPost(postId).map { comment ->
+                val userInfo = findUser(comment.authorId)
+                userInfo?.let { _ ->
+                    CommentsResponse(
+                        comment.dateOfCreation,
+                        "${userInfo.firstName} ${userInfo.lastName}",
+                        userInfo.username,
+                        userInfo.profileImageUrl,
+                        comment.peopleLiked.size,
+                        comment.text,
+                        comment.peopleLiked.contains(myId),
+                        comment.peopleHelpful.contains(myId),
+                        comment.id
+                    )
+                }
+            }.mapNotNull {
+                it
+            }.sortedByDescending { it.dateOfCreation }
+
+            call.respond(HttpStatusCode.OK, comments)
+        }
+
+        post {
+            val myId = call.principal<UserIdPrincipal>()!!.name
+            val comment = try {
+                call.receive<AddCommentRequest>()
+            } catch (e: ContentTransformationException) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@post
+            }
+
+            if (addComment(comment.postId, comment.text, myId)){
+                call.respond(HttpStatusCode.OK)
+            }else{
+                call.respond(HttpStatusCode.Conflict)
+            }
+        }
+
+        post("/like") {
+            val id = call.principal<UserIdPrincipal>()!!.name
+            val commentId = try {
+                call.receive<IdRequest>()
+            } catch (e: ContentTransformationException) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@post
+            }
+            if (likeUnlikeComment(commentId.id, id))
+                call.respond(HttpStatusCode.OK)
+            else
+                call.respond(HttpStatusCode.Conflict)
+        }
+
+        post("/helpful") {
+            val id = call.principal<UserIdPrincipal>()!!.name
+            val commentId = try {
+                call.receive<IdRequest>()
+            } catch (e: ContentTransformationException) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@post
+            }
+            if (helpfulComment(commentId.id, id))
+                call.respond(HttpStatusCode.OK)
+            else
+                call.respond(HttpStatusCode.Conflict)
         }
     }
 }
@@ -158,74 +233,5 @@ fun Route.postsRoutes() {
             call.respond(HttpStatusCode.OK, postsOfUsers)
         }
 
-        get("/comments"){
-            val myId = call.principal<UserIdPrincipal>()!!.name
-            val postId = call.request.queryParameters["id"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing id")
-
-            val comments = getCommentsForPost(postId).map { comment ->
-                val userInfo = findUser(comment.authorId)
-                userInfo?.let { _ ->
-                    CommentsResponse(
-                        comment.dateOfCreation,
-                        "${userInfo.firstName} ${userInfo.lastName}",
-                        userInfo.username,
-                        userInfo.profileImageUrl,
-                        comment.peopleLiked.size,
-                        comment.text,
-                        comment.peopleLiked.contains(myId),
-                        comment.peopleHelpful.contains(myId),
-                        comment.id
-                    )
-                }
-            }.mapNotNull {
-                it
-            }.sortedByDescending { it.dateOfCreation }
-
-            call.respond(HttpStatusCode.OK, comments)
-        }
-
-        post("/comments") {
-            val myId = call.principal<UserIdPrincipal>()!!.name
-            val comment = try {
-                call.receive<AddCommentRequest>()
-            } catch (e: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
-
-            if (addComment(comment.postId, comment.text, myId)){
-                call.respond(HttpStatusCode.OK)
-            }else{
-                call.respond(HttpStatusCode.Conflict)
-            }
-        }
-
-        post("/comments/like") {
-            val id = call.principal<UserIdPrincipal>()!!.name
-            val commentId = try {
-                call.receive<IdRequest>()
-            } catch (e: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
-            if (likeUnlikeComment(commentId.id, id))
-                call.respond(HttpStatusCode.OK)
-            else
-                call.respond(HttpStatusCode.Conflict)
-        }
-
-        post("/comments/helpful") {
-            val id = call.principal<UserIdPrincipal>()!!.name
-            val commentId = try {
-                call.receive<IdRequest>()
-            } catch (e: ContentTransformationException) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
-            if (helpfulComment(commentId.id, id))
-                call.respond(HttpStatusCode.OK)
-            else
-                call.respond(HttpStatusCode.Conflict)
-        }
     }
 }
