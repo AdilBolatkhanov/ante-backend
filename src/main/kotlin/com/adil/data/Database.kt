@@ -87,10 +87,12 @@ suspend fun followUser(myId: String, userId: String): Boolean {
 }
 
 suspend fun unfollowUser(myId: String, userId: String): Boolean {
-    val followingList = findUser(myId)?.following ?: return false
-    val followersList = findUser(userId)?.followers ?: return false
-    val followingAction = users.updateOneById(myId, setValue(User::following, followingList - userId)).wasAcknowledged()
-    val followersAction = users.updateOneById(userId, setValue(User::followers, followersList - myId)).wasAcknowledged()
+    val followingList = findUser(myId)?.following?.toMutableList() ?: return false
+    val followersList = findUser(userId)?.followers?.toMutableList() ?: return false
+    followingList.remove(userId)
+    followersList.remove(myId)
+    val followingAction = users.updateOneById(myId, setValue(User::following, followingList)).wasAcknowledged()
+    val followersAction = users.updateOneById(userId, setValue(User::followers, followersList)).wasAcknowledged()
     return followingAction && followersAction
 }
 
@@ -103,6 +105,28 @@ suspend fun getHabitById(id: String): Habit? {
     return habits.findOneById(id)
 }
 
+suspend fun addHabit(habit: Habit): Boolean {
+    return habits.insertOne(habit).wasAcknowledged()
+}
+
+suspend fun updateHabit(habit: Habit): Boolean {
+    return habits.updateOne(Habit::id eq habit.id, habit).wasAcknowledged()
+}
+
+suspend fun markAsDoneHabit(habit: Habit, canMarkToday: Boolean): Boolean {
+    return if (canMarkToday){
+        habits.updateOneById(habit.id, setValue(Habit::curNumOfDays, habit.curNumOfDays + 1)).wasAcknowledged()
+        habits.updateOneById(habit.id, setValue(Habit::lastTimeMarked, System.currentTimeMillis())).wasAcknowledged()
+    }
+    else {
+        habits.updateOneById(habit.id, setValue(Habit::curNumOfDays, habit.curNumOfDays - 1)).wasAcknowledged()
+        habits.updateOneById(habit.id, setValue(Habit::lastTimeMarked,  0)).wasAcknowledged()
+    }
+}
+
+suspend fun deleteHabit(habitId: String): Boolean {
+    return habits.deleteOneById(habitId).wasAcknowledged()
+}
 //Goals
 suspend fun getGoalsForUser(userId: String): List<Goal> {
     return goals.find(Goal::ownerId eq userId).toList()

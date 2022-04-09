@@ -1,9 +1,6 @@
-package com.adil.data.collections
+package com.adil.data.responses
 
-import org.bson.codecs.pojo.annotations.BsonId
-import org.bson.types.ObjectId
-
-data class Habit(
+data class HabitResponse(
     val title: String,
     val backgroundColor: String,
     val iconName: String,
@@ -12,9 +9,7 @@ data class Habit(
     val targetNumOfDays: Int,
     val curNumOfDays: Int,
     val ownerId: String,
-    val lastTimeMarked: Long,
+    val canMarkToday: Boolean,
     val isPrivate: Boolean,
-    @BsonId
-    val id: String = ObjectId().toString()
+    val id: String
 )
-
