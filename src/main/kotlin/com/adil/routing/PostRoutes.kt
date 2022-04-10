@@ -39,6 +39,7 @@ fun Route.commentsRoutes(){
                         "${userInfo.firstName} ${userInfo.lastName}",
                         userInfo.username,
                         userInfo.profileImageUrl,
+                        userInfo.id,
                         comment.peopleLiked.size,
                         comment.text,
                         comment.peopleLiked.contains(myId),

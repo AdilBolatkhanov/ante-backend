@@ -5,6 +5,7 @@ data class CommentsResponse(
     val authorName: String,
     val authorUsername: String,
     val authorImageUrl: String?,
+    val authorId: String,
     val likes: Int,
     val text: String,
     val isLiked: Boolean,

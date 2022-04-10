@@ -46,6 +46,7 @@ fun Application.module() {
     registerImageHandlingRoutes()
     registerPostRoutes()
     registerHabitRoutes()
+    registerGoalRoutes()
     routing {
         authenticate {
             get("/") {

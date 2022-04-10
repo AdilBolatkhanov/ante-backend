@@ -136,9 +136,33 @@ suspend fun getGoalById(id: String): Goal? {
     return goals.findOneById(id)
 }
 
+suspend fun updateGoal(goal: Goal): Boolean {
+    return goals.updateOne(Goal::id eq goal.id, goal).wasAcknowledged()
+}
+
+suspend fun addGoal(goal: Goal): Boolean {
+    return goals.insertOne(goal).wasAcknowledged()
+}
+
+suspend fun deleteGoal(goalId: String): Boolean {
+    return goals.deleteOneById(goalId).wasAcknowledged()
+}
+
 //SubGoals
 suspend fun getSubGoalForGoal(goalId: String): List<SubGoal> {
     return subGoals.find(SubGoal::goalId eq goalId).toList()
+}
+
+suspend fun addSubGoals(subGoalList: List<SubGoal>): Boolean {
+    return subGoals.insertMany(subGoalList).wasAcknowledged()
+}
+
+suspend fun deleteSubGoalsForGoal(goalId: String): Boolean {
+    return subGoals.deleteMany(SubGoal::goalId eq goalId).wasAcknowledged()
+}
+
+suspend fun completeSubGoal(subGoalId: String): Boolean {
+    return subGoals.updateOneById(subGoalId, setValue(SubGoal::isCompleted, true)).wasAcknowledged()
 }
 
 //Posts
