@@ -32,7 +32,9 @@ fun Application.registerSearchRoutes() {
 fun Route.searchRoutes(){
     route(SEARCH){
         get {
-            val query = call.request.queryParameters["query"] ?:  return@get call.respond(HttpStatusCode.BadRequest, "Missing query")
+            val myId = call.principal<UserIdPrincipal>()!!.name
+            val myProfile = findUser(myId) ?: return@get call.respond(HttpStatusCode.BadRequest, "No user with such id exists")
+            val query = call.request.queryParameters["query"] ?: return@get call.respond(HttpStatusCode.BadRequest, "Missing query")
 
             val searchResult = searchUser(query).map { user ->
                 SearchResponse(
@@ -40,7 +42,8 @@ fun Route.searchRoutes(){
                     name = "${user.firstName} ${user.lastName}",
                     username = user.username,
                     profileImageUrl = user.profileImageUrl,
-                    bio = user.bio
+                    bio = user.bio,
+                    isFollowed = myProfile.following.contains(user.id)
                 )
             }
             call.respond(HttpStatusCode.OK, searchResult)

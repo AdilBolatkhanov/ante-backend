@@ -5,5 +5,6 @@ data class SearchResponse(
     val username: String,
     val name: String,
     val profileImageUrl: String?,
-    val bio: String?
+    val bio: String?,
+    val isFollowed: Boolean
 )
