@@ -6,7 +6,9 @@ import com.adil.utils.Constants.ANTE_BACKEND
 import com.adil.utils.Constants.MONGODB_URI
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
+import org.litote.kmongo.match
 import org.litote.kmongo.reactivestreams.KMongo
+import org.litote.kmongo.regex
 import org.litote.kmongo.setValue
 
 private val client = KMongo.createClient(System.getenv(MONGODB_URI)).coroutine
@@ -68,6 +70,17 @@ suspend fun updateUserBackground(id: String, background: String): Boolean {
 
 suspend fun updateUserProfileImage(id: String, profileImage: String): Boolean {
     return users.updateOne(User::id eq id, setValue(User::profileImageUrl, profileImage)).wasAcknowledged()
+}
+
+suspend fun searchUser(query: String): List<User> {
+    val result = mutableListOf<User>()
+    val usernameLists = users.find(User::username regex ".*$query.*").toList()
+    val firstName = users.find(User::firstName regex ".*$query.*").toList()
+    val lastName = users.find(User::lastName regex ".*$query.*").toList()
+    result.addAll(usernameLists)
+    result.addAll(firstName)
+    result.addAll(lastName)
+    return result
 }
 
 suspend fun checkIfAlreadyFollowed(myId: String, userId: String): Boolean {
