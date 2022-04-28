@@ -48,6 +48,7 @@ fun Application.module() {
     registerHabitRoutes()
     registerGoalRoutes()
     registerSearchRoutes()
+    registerNotificationRoutes()
     routing {
         authenticate {
             get("/") {

@@ -1,15 +1,13 @@
 package com.adil.data
 
 import com.adil.data.collections.*
+import com.adil.data.responses.FollowingNotification
 import com.adil.security.hashPassword
 import com.adil.utils.Constants.ANTE_BACKEND
 import com.adil.utils.Constants.MONGODB_URI
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.eq
-import org.litote.kmongo.match
 import org.litote.kmongo.reactivestreams.KMongo
-import org.litote.kmongo.regex
-import org.litote.kmongo.setValue
 
 private val client = KMongo.createClient(System.getenv(MONGODB_URI)).coroutine
 private val database = client.getDatabase(ANTE_BACKEND)
@@ -19,6 +17,8 @@ private val goals = database.getCollection<Goal>()
 private val subGoals = database.getCollection<SubGoal>()
 private val posts = database.getCollection<Post>()
 private val comments = database.getCollection<Comment>()
+private val followingStorage = database.getCollection<FollowStorage>()
+private val likesStorage = database.getCollection<LikesStorage>()
 //User
 suspend fun registerUser(user: User): Boolean {
     return users.insertOne(user).wasAcknowledged()
@@ -183,11 +183,20 @@ suspend fun getPostForUser(id: String): List<Post>{
     return posts.find(Post::ownerId eq id).toList()
 }
 
+suspend fun getPostById(id: String): Post? {
+    return posts.findOneById(id)
+}
+
 suspend fun likeUnlikePost(id: String, userId: String): Boolean {
-    val peopleLiked = posts.findOneById(id)?.peopleLiked ?: return false
+    val post = posts.findOneById(id) ?: return false
+    val peopleLiked = post.peopleLiked
     return if (peopleLiked.contains(userId)){
+        removeLikeEvent(userId, id)
         posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked - userId)).wasAcknowledged()
-    }else posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked + userId)).wasAcknowledged()
+    }else{
+        addLikeEvent(userId, id, post.ownerId)
+        posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked + userId)).wasAcknowledged()
+    }
 }
 
 suspend fun addRegularPost(description: String, imageUrl: String?, ownerId: String): Boolean {
@@ -241,4 +250,30 @@ suspend fun helpfulComment(id: String, userId: String): Boolean {
     return if (peopleHelpful.contains(userId)){
         comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful - userId)).wasAcknowledged()
     }else comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful + userId)).wasAcknowledged()
+}
+
+//FollowStorage
+suspend fun addFollowedEvent(followerId: String, followingId: String): Boolean {
+    return followingStorage.insertOne(FollowStorage(followerId, followingId, System.currentTimeMillis())).wasAcknowledged()
+}
+
+suspend fun removeFollowedEvent(followerId: String, followingId: String): Boolean {
+    return followingStorage.deleteOne(and(FollowStorage::followerId eq followerId , FollowStorage::followingId eq followingId)).wasAcknowledged()
+}
+
+suspend fun getFollowedEvent(myId: String): List<FollowStorage> {
+    return followingStorage.find(FollowStorage::followingId eq myId).toList()
+}
+
+//LikesStorage
+suspend fun addLikeEvent(userLikedId: String, postId: String, postOwnerId: String): Boolean {
+    return likesStorage.insertOne(LikesStorage(userLikedId, postId, postOwnerId, System.currentTimeMillis())).wasAcknowledged()
+}
+
+suspend fun removeLikeEvent(userLikedId: String, postId: String): Boolean {
+    return likesStorage.deleteOne(and(LikesStorage::userLikedId eq userLikedId , LikesStorage::postId eq postId)).wasAcknowledged()
+}
+
+suspend fun getLikeEvent(myId: String): List<LikesStorage> {
+    return likesStorage.find(LikesStorage::postOwnerId eq myId).toList()
 }

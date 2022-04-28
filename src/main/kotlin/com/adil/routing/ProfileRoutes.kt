@@ -232,6 +232,7 @@ fun Route.getProfileInfo() {
                 return@post
             }
             if (followUser(myId, userId)){
+                addFollowedEvent(myId, userId)
                 call.respond(
                     HttpStatusCode.OK,
                    "Successfully followed"
@@ -263,6 +264,7 @@ fun Route.getProfileInfo() {
             }
 
             if (unfollowUser(myId, userId)){
+                removeFollowedEvent(myId, userId)
                 call.respond(
                     HttpStatusCode.OK,
                     "Successfully unfollowed"
