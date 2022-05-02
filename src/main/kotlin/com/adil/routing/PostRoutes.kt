@@ -64,6 +64,9 @@ fun Route.commentsRoutes(){
             }
 
             if (addComment(comment.postId, comment.text, myId)){
+                getPostById(comment.postId)?.let {
+                    addCommentEvent(comment.text, comment.postId, myId, it.ownerId)
+                }
                 call.respond(HttpStatusCode.OK)
             }else{
                 call.respond(HttpStatusCode.Conflict)

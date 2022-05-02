@@ -19,6 +19,8 @@ private val posts = database.getCollection<Post>()
 private val comments = database.getCollection<Comment>()
 private val followingStorage = database.getCollection<FollowStorage>()
 private val likesStorage = database.getCollection<LikesStorage>()
+private val commentStorage = database.getCollection<CommentStorage>()
+
 //User
 suspend fun registerUser(user: User): Boolean {
     return users.insertOne(user).wasAcknowledged()
@@ -127,19 +129,19 @@ suspend fun updateHabit(habit: Habit): Boolean {
 }
 
 suspend fun markAsDoneHabit(habit: Habit, canMarkToday: Boolean): Boolean {
-    return if (canMarkToday){
+    return if (canMarkToday) {
         habits.updateOneById(habit.id, setValue(Habit::curNumOfDays, habit.curNumOfDays + 1)).wasAcknowledged()
         habits.updateOneById(habit.id, setValue(Habit::lastTimeMarked, System.currentTimeMillis())).wasAcknowledged()
-    }
-    else {
+    } else {
         habits.updateOneById(habit.id, setValue(Habit::curNumOfDays, habit.curNumOfDays - 1)).wasAcknowledged()
-        habits.updateOneById(habit.id, setValue(Habit::lastTimeMarked,  0)).wasAcknowledged()
+        habits.updateOneById(habit.id, setValue(Habit::lastTimeMarked, 0)).wasAcknowledged()
     }
 }
 
 suspend fun deleteHabit(habitId: String): Boolean {
     return habits.deleteOneById(habitId).wasAcknowledged()
 }
+
 //Goals
 suspend fun getGoalsForUser(userId: String): List<Goal> {
     return goals.find(Goal::ownerId eq userId).toList()
@@ -179,7 +181,7 @@ suspend fun completeSubGoal(subGoalId: String): Boolean {
 }
 
 //Posts
-suspend fun getPostForUser(id: String): List<Post>{
+suspend fun getPostForUser(id: String): List<Post> {
     return posts.find(Post::ownerId eq id).toList()
 }
 
@@ -190,10 +192,10 @@ suspend fun getPostById(id: String): Post? {
 suspend fun likeUnlikePost(id: String, userId: String): Boolean {
     val post = posts.findOneById(id) ?: return false
     val peopleLiked = post.peopleLiked
-    return if (peopleLiked.contains(userId)){
+    return if (peopleLiked.contains(userId)) {
         removeLikeEvent(userId, id)
         posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked - userId)).wasAcknowledged()
-    }else{
+    } else {
         addLikeEvent(userId, id, post.ownerId)
         posts.updateOneById(id, setValue(Post::peopleLiked, peopleLiked + userId)).wasAcknowledged()
     }
@@ -240,25 +242,31 @@ suspend fun addComment(postId: String, text: String, authorId: String): Boolean 
 
 suspend fun likeUnlikeComment(id: String, userId: String): Boolean {
     val peopleLiked = comments.findOneById(id)?.peopleLiked ?: return false
-    return if (peopleLiked.contains(userId)){
+    return if (peopleLiked.contains(userId)) {
         comments.updateOneById(id, setValue(Comment::peopleLiked, peopleLiked - userId)).wasAcknowledged()
-    }else comments.updateOneById(id, setValue(Comment::peopleLiked, peopleLiked + userId)).wasAcknowledged()
+    } else comments.updateOneById(id, setValue(Comment::peopleLiked, peopleLiked + userId)).wasAcknowledged()
 }
 
 suspend fun helpfulComment(id: String, userId: String): Boolean {
     val peopleHelpful = comments.findOneById(id)?.peopleHelpful ?: return false
-    return if (peopleHelpful.contains(userId)){
+    return if (peopleHelpful.contains(userId)) {
         comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful - userId)).wasAcknowledged()
-    }else comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful + userId)).wasAcknowledged()
+    } else comments.updateOneById(id, setValue(Comment::peopleHelpful, peopleHelpful + userId)).wasAcknowledged()
 }
 
 //FollowStorage
 suspend fun addFollowedEvent(followerId: String, followingId: String): Boolean {
-    return followingStorage.insertOne(FollowStorage(followerId, followingId, System.currentTimeMillis())).wasAcknowledged()
+    return followingStorage.insertOne(FollowStorage(followerId, followingId, System.currentTimeMillis()))
+        .wasAcknowledged()
 }
 
 suspend fun removeFollowedEvent(followerId: String, followingId: String): Boolean {
-    return followingStorage.deleteOne(and(FollowStorage::followerId eq followerId , FollowStorage::followingId eq followingId)).wasAcknowledged()
+    return followingStorage.deleteOne(
+        and(
+            FollowStorage::followerId eq followerId,
+            FollowStorage::followingId eq followingId
+        )
+    ).wasAcknowledged()
 }
 
 suspend fun getFollowedEvent(myId: String): List<FollowStorage> {
@@ -267,13 +275,32 @@ suspend fun getFollowedEvent(myId: String): List<FollowStorage> {
 
 //LikesStorage
 suspend fun addLikeEvent(userLikedId: String, postId: String, postOwnerId: String): Boolean {
-    return likesStorage.insertOne(LikesStorage(userLikedId, postId, postOwnerId, System.currentTimeMillis())).wasAcknowledged()
+    return likesStorage.insertOne(LikesStorage(userLikedId, postId, postOwnerId, System.currentTimeMillis()))
+        .wasAcknowledged()
 }
 
 suspend fun removeLikeEvent(userLikedId: String, postId: String): Boolean {
-    return likesStorage.deleteOne(and(LikesStorage::userLikedId eq userLikedId , LikesStorage::postId eq postId)).wasAcknowledged()
+    return likesStorage.deleteOne(and(LikesStorage::userLikedId eq userLikedId, LikesStorage::postId eq postId))
+        .wasAcknowledged()
 }
 
 suspend fun getLikeEvent(myId: String): List<LikesStorage> {
     return likesStorage.find(LikesStorage::postOwnerId eq myId).toList()
 }
+
+//CommentStorage
+suspend fun addCommentEvent(
+    commentText: String,
+    postId: String,
+    writerId: String,
+    ownerOfPostId: String
+) {
+    commentStorage.insertOne(CommentStorage(commentText, postId, writerId, System.currentTimeMillis(), ownerOfPostId))
+}
+
+suspend fun getCommentEvent(
+    userId: String
+): List<CommentStorage> {
+    return commentStorage.find(CommentStorage::ownerOfPostId eq userId).toList()
+}
+
